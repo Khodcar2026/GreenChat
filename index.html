@@ -105,6 +105,9 @@ input[dir=ltr]{text-align:left}
 .btn{width:100%;padding:14px;border-radius:999px;background:var(--gum);color:var(--ink);font-weight:800;font-size:15px;margin-top:6px}
 .btn:hover{background:var(--gum-d)}.btn:disabled{opacity:.6}
 .err{color:#c62828;font-size:13px;min-height:22px;margin:2px 14px 8px}
+.err.ok{color:#1b7a3a}
+.hint{display:block;font-size:11.5px;color:var(--mut);margin:6px 14px 0;line-height:1.8}
+.lnk{display:block;margin:-4px 14px 6px;font-size:12.5px;font-weight:700;color:#2f9a4d;padding:4px 6px}
 .err small{display:block;font-size:11px;color:var(--mut);margin-top:2px;word-break:break-word;direction:ltr;text-align:start}
 /* app */
 #app{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;max-width:1180px;margin:0 auto;overflow:hidden;background:rgba(255,255,255,.28)}
@@ -239,9 +242,11 @@ html[dir=rtl] .pillin button i.fa-paper-plane{transform:scaleX(-1)}
     <div class="acard">
       <div class="seg" id="seg" data-m="sign"><button id="tSign" class="on" type="button" data-i="signup"></button><button id="tLogin" type="button" data-i="login"></button></div>
       <div id="authForm">
-        <div class="field"><label for="u" data-i="user"></label><div class="inp"><i class="fa-solid fa-at"></i><input id="u" type="text" dir="ltr" autocapitalize="off" autocomplete="username" placeholder="mina_22"></div></div>
+        <div class="field"><label for="u" id="ul"></label><div class="inp"><i class="fa-solid fa-at"></i><input id="u" type="text" dir="ltr" autocapitalize="off" autocomplete="username"></div></div>
+        <div class="collapse" id="emw"><div><div class="field"><label for="em" data-i="email_opt"></label><div class="inp"><i class="fa-solid fa-envelope"></i><input id="em" type="text" inputmode="email" dir="ltr" autocapitalize="off" autocomplete="email" placeholder="you@mail.com"></div><small class="hint" data-i="email_hint"></small></div></div></div>
         <div class="field"><label for="p" data-i="pass"></label><div class="inp"><i class="fa-solid fa-lock"></i><input id="p" type="password" dir="ltr" autocomplete="new-password"><button type="button" class="eye" id="eye" aria-label="show"><i class="fa-solid fa-eye"></i></button></div></div>
         <div class="collapse" id="p2w"><div><div class="field"><label for="p2" data-i="pass2"></label><div class="inp"><i class="fa-solid fa-lock"></i><input id="p2" type="password" dir="ltr" autocomplete="new-password"></div></div></div></div>
+        <button type="button" class="lnk hide" id="fg" data-fg data-i="forgot"></button>
         <div class="err" id="aerr"></div>
         <button class="btn" id="go"></button>
       </div>
@@ -292,6 +297,9 @@ ar:{brand:'غرين تشات',beta:'تجريبي',tag:'دردشة خضراء، �
 Object.assign(L.fa,{app:'برنامه و اعلان‌ها',inst:'نصب برنامه',inst_ios:'در Safari دکمهٔ اشتراک‌گذاری را بزنید و «Add to Home Screen» را انتخاب کنید.',notif:'اعلان پیام جدید',snd:'صدای پیام',n_denied:'اعلان‌ها در مرورگر مسدود است؛ از تنظیمات سایت مجازش کنید.',n_unsup:'اعلان اینجا پشتیبانی نمی‌شود (آدرس باید HTTPS باشد).',offline:'اتصال اینترنت قطع شد.',backon:'دوباره آنلاین شدید.',frq:'{0} درخواست دوستی فرستاد.'});
 Object.assign(L.en,{app:'App & notifications',inst:'Install app',inst_ios:'In Safari, tap Share and choose "Add to Home Screen".',notif:'New message notifications',snd:'Message sound',n_denied:'Notifications are blocked; allow them in the browser site settings.',n_unsup:'Notifications are not supported here (HTTPS is required).',offline:'You are offline.',backon:'Back online.',frq:'{0} sent you a friend request.'});
 Object.assign(L.ar,{app:'التطبيق والإشعارات',inst:'تثبيت التطبيق',inst_ios:'في Safari اضغط مشاركة ثم اختر «إضافة إلى الشاشة الرئيسية».',notif:'إشعارات الرسائل الجديدة',snd:'صوت الرسائل',n_denied:'الإشعارات محظورة؛ اسمح بها من إعدادات الموقع في المتصفح.',n_unsup:'الإشعارات غير مدعومة هنا (يتطلب HTTPS).',offline:'أنت غير متصل بالإنترنت.',backon:'عاد الاتصال.',frq:'أرسل {0} طلب صداقة.'});
+Object.assign(L.fa,{ident:'ایمیل یا نام کاربری',email_opt:'ایمیل (اختیاری)',email_hint:'با ایمیل می‌توانید رمز عبور را بازیابی کنید. ورود هم با همان ایمیل انجام می‌شود.',forgot:'رمز عبور را فراموش کرده‌اید؟',f_title:'بازیابی رمز عبور',f_send:'ارسال لینک بازیابی',f_sent:'اگر این ایمیل ثبت شده باشد، لینک بازیابی ارسال شد.',e_email:'ایمیل معتبر نیست.',e_emailtaken:'این ایمیل قبلاً ثبت شده است.',e_check:'ایمیل تأیید ارسال شد؛ بعد از تأیید، وارد شوید.',e_unconf:'ابتدا ایمیل خود را تأیید کنید.',np_title:'رمز عبور جدید',np_save:'ذخیره',np_done:'رمز عبور تغییر کرد.'});
+Object.assign(L.en,{ident:'Email or username',email_opt:'Email (optional)',email_hint:'Use an email to recover your password. You will log in with that email.',forgot:'Forgot password?',f_title:'Reset password',f_send:'Send reset link',f_sent:'If this email is registered, a reset link was sent.',e_email:'Invalid email.',e_emailtaken:'This email is already registered.',e_check:'Confirmation email sent; confirm it, then log in.',e_unconf:'Please confirm your email first.',np_title:'New password',np_save:'Save',np_done:'Password changed.'});
+Object.assign(L.ar,{ident:'البريد أو اسم المستخدم',email_opt:'البريد الإلكتروني (اختياري)',email_hint:'يمكنك استعادة كلمة المرور عبر البريد، وسيكون الدخول بنفس البريد.',forgot:'نسيت كلمة المرور؟',f_title:'استعادة كلمة المرور',f_send:'إرسال رابط الاستعادة',f_sent:'إذا كان هذا البريد مسجلاً فقد أُرسل رابط الاستعادة.',e_email:'البريد الإلكتروني غير صالح.',e_emailtaken:'هذا البريد مسجل مسبقًا.',e_check:'أُرسل بريد التأكيد؛ أكّده ثم سجّل الدخول.',e_unconf:'أكّد بريدك الإلكتروني أولاً.',np_title:'كلمة مرور جديدة',np_save:'حفظ',np_done:'تم تغيير كلمة المرور.'});
 let lang='fa';try{lang=localStorage.getItem('gc_lang')||'fa'}catch(e){}
 if(!L[lang])lang='fa';
 const LOC={fa:'fa-IR',ar:'ar',en:'en-US'},rtl=()=>lang!='en';
@@ -400,29 +408,41 @@ setTimeout(endSplash,7000);
 
 /* ---------- auth ---------- */
 const mail=u=>u+'@'+EMAIL_DOMAIN;
-function setMode(m){mode=m;$('#seg').dataset.m=m;$('#tLogin').classList.toggle('on',m=='login');$('#tSign').classList.toggle('on',m=='sign');$('#p2w').classList.toggle('shut',m=='login');$('#p2w').inert=m=='login';$('#go').textContent=t(m=='login'?'login':'mk');$('#aerr').textContent='';$('#p').autocomplete=m=='login'?'current-password':'new-password'}
+function setMode(m){mode=m;$('#seg').dataset.m=m;$('#ul').textContent=t(m=='login'?'ident':'user');$('#u').placeholder=m=='login'?'you@mail.com  /  mina_22':'mina_22';$('#emw').classList.toggle('shut',m=='login');$('#emw').inert=m=='login';$('#fg').classList.toggle('hide',m!='login');$('#tLogin').classList.toggle('on',m=='login');$('#tSign').classList.toggle('on',m=='sign');$('#p2w').classList.toggle('shut',m=='login');$('#p2w').inert=m=='login';$('#go').textContent=t(m=='login'?'login':'mk');$('#aerr').textContent='';$('#aerr').className='err';$('#p').autocomplete=m=='login'?'current-password':'new-password'}
 $('#tLogin').onclick=()=>setMode('login');$('#tSign').onclick=()=>setMode('sign');
 $('#eye').onclick=()=>{const h=$('#p').type=='password';$('#p').type=$('#p2').type=h?'text':'password';$('#eye').innerHTML=ic(h?'eye-slash':'eye')};
 $('#authForm').onkeydown=e=>{if(e.key=='Enter')$('#go').click()};
+const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 $('#go').onclick=async()=>{
-  const u=$('#u').value.trim().toLowerCase(),p=$('#p').value,err=$('#aerr');err.textContent='';
+  const ident=$('#u').value.trim().toLowerCase(),p=$('#p').value,em=$('#em').value.trim().toLowerCase(),err=$('#aerr');
+  err.className='err';err.textContent='';
+  const fail=m=>{err.textContent=m},done=()=>{$('#go').disabled=false;$('#go').textContent=t(mode=='login'?'login':'mk')};
   if(!sb){err.innerHTML=t('err')+`<small>${typeof supabase=='undefined'?'Supabase library failed to load (CDN blocked?)':'Missing SUPABASE_URL / KEY'}</small>`;return}
-  if(!/^[a-z0-9_]{3,20}$/.test(u))return err.textContent=t('e_user');
-  if(p.length<6)return err.textContent=t('e_pass');
-  if(mode=='sign'&&p!==$('#p2').value)return err.textContent=t('e_match');
+  if(mode=='sign'){
+    if(!/^[a-z0-9_]{3,20}$/.test(ident))return fail(t('e_user'));
+    if(em&&!EMAIL_RE.test(em))return fail(t('e_email'));
+    if(p.length<6)return fail(t('e_pass'));
+    if(p!==$('#p2').value)return fail(t('e_match'));
+  }else if(!ident||!p)return fail(t('e_wrong'));
   $('#go').disabled=true;$('#go').textContent=t('wait');
   try{
     if(mode=='sign'){
-      const {data,error}=await sb.auth.signUp({email:mail(u),password:p,options:{data:{username:u}}});
+      try{const r=await sb.rpc('username_available',{p_username:ident});if(r.data===false){done();return fail(t('e_taken'))}}catch(_){}
+      const {data,error}=await sb.auth.signUp({email:em||mail(ident),password:p,options:{data:{username:ident},emailRedirectTo:location.href.split('#')[0]}});
       if(error)throw error;
-      if(!data.session){const r=await sb.auth.signInWithPassword({email:mail(u),password:p});if(r.error)throw new Error('confirm')}
-    }else{const {error}=await sb.auth.signInWithPassword({email:mail(u),password:p});if(error)throw error}
+      if(!data.session){
+        if(em){err.className='err ok';err.textContent=t('e_check');done();return}
+        const r=await sb.auth.signInWithPassword({email:mail(ident),password:p});if(r.error)throw new Error('confirm')
+      }
+    }else{
+      const {error}=await sb.auth.signInWithPassword({email:ident.includes('@')?ident:mail(ident),password:p});if(error)throw error
+    }
   }catch(e){
     const m=e.message||'';
-    err.textContent=/already|registered/i.test(m)?t('e_taken'):/invalid login/i.test(m)?t('e_wrong'):m=='confirm'?t('e_conf'):'';
+    fail(/already|registered/i.test(m)?t(em?'e_emailtaken':'e_taken'):/invalid login/i.test(m)?t('e_wrong'):/not confirmed/i.test(m)?t('e_unconf'):/invalid/i.test(m)&&/email/i.test(m)?t('e_email'):m=='confirm'?t('e_conf'):'');
     if(!err.textContent)err.innerHTML=t('err')+`<small>${esc(m)}</small>`;
   }
-  $('#go').disabled=false;setMode(mode);
+  done();
 };
 
 /* ---------- data ---------- */
@@ -562,6 +582,8 @@ function closeSheet(){$('#sheet').classList.add('hide')}
 function sheet(kind,gid){
   const b=$('#sb');
   if(kind=='new')b.innerHTML=`<h3>${t('newGroup')}</h3><div class="inp" style="margin-bottom:6px"><input id="gname" type="text" dir="auto" maxlength="40" style="padding-left:18px" placeholder="${t('g_name')}"></div><div class="h2">${t('g_join')}</div>${[['open','globe'],['link','link'],['friends','user-group']].map(([k,i],n)=>`<label class="opt"><input type="radio" name="gm" value="${k}" ${n?'':'checked'}>${ic(i)}<span class="t">${t('m_'+k)}</span>${ic('circle-check')}</label>`).join('')}<button class="btn" data-mk>${t('g_mk')}</button><div class="h2">${t('g_code')}</div><div class="rw"><input id="gcode" type="text" dir="ltr" placeholder="${t('g_ph')}"><button class="chip" data-jc>${t('join')}</button></div><div class="err" id="gerr"></div>`;
+  if(kind=='forgot')b.innerHTML=`<h3>${t('f_title')}</h3><div class="inp" style="margin-bottom:6px"><i class="fa-solid fa-envelope"></i><input id="fem" type="text" dir="ltr" inputmode="email" autocapitalize="off" placeholder="you@mail.com"></div><button class="btn" data-fsend>${t('f_send')}</button><div class="err" id="gerr"></div>`;
+  if(kind=='newpass')b.innerHTML=`<h3>${t('np_title')}</h3><div class="inp" style="margin-bottom:10px"><i class="fa-solid fa-lock"></i><input id="np1" type="password" dir="ltr" autocomplete="new-password" placeholder="${t('pass')}"></div><div class="inp"><i class="fa-solid fa-lock"></i><input id="np2" type="password" dir="ltr" autocomplete="new-password" placeholder="${t('pass2')}"></div><button class="btn" data-npsave>${t('np_save')}</button><div class="err" id="gerr"></div>`;
   if(kind=='info'){
     const g=G.find(x=>x.id==gid);if(!g)return;const mem=GMem.filter(m=>m.group_id==gid),own=g.owner==me,link=location.href.split('#')[0]+'#join='+g.invite_code;
     b.innerHTML=`<h3>${esc(g.name)}</h3><small class="mut">${t('members',mem.length)}</small><div class="h2">${t('g_join')}</div>`+(own?['open','link','friends'].map(k=>`<button class="opt ${g.join_mode==k?'on':''}" data-setm="${k}" data-g="${gid}"><span class="t">${t('m_'+k)}</span>${g.join_mode==k?ic('circle-check'):''}</button>`).join(''):`<small class="mut">${t('m_'+g.join_mode)}</small>`)
@@ -584,7 +606,7 @@ document.addEventListener('keydown',e=>{if(e.key=='Escape')closeSheet()});
 document.addEventListener('click',async e=>{
   if(e.target.id=='sheet')return closeSheet();
   const bt=e.target.closest('button');if(bt&&bt.id!='snd')bt.blur();
-  const x=e.target.closest('[data-tab],[data-chat],[data-grp],[data-add],[data-acc],[data-del],[data-priv],[data-dm],[data-ed],[data-ced],[data-back],[data-lang],[data-pick],[data-install],[data-notif],[data-snd],[data-sheet],[data-mk],[data-jc],[data-copy],[data-setm],[data-leave],[data-delg],[data-ginfo],[data-gjoin],#out,.b.me');if(!x)return;const d=x.dataset;
+  const x=e.target.closest('[data-tab],[data-chat],[data-grp],[data-add],[data-acc],[data-del],[data-priv],[data-dm],[data-ed],[data-ced],[data-back],[data-lang],[data-pick],[data-install],[data-notif],[data-snd],[data-fg],[data-fsend],[data-npsave],[data-sheet],[data-mk],[data-jc],[data-copy],[data-setm],[data-leave],[data-delg],[data-ginfo],[data-gjoin],#out,.b.me');if(!x)return;const d=x.dataset;
   if(d.tab){tab=d.tab;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab==tab));$('#views').innerHTML='';render();animate()}
   else if(d.pick){lang=d.pick;try{localStorage.setItem('gc_lang',lang)}catch(_){}langChosen=true;applyLang();$('#langpg').classList.add('hide');$('#auth').classList.remove('hide')}
   else if('install' in d){if(dip){dip.prompt();try{await dip.userChoice}catch(_){}dip=null;render()}else toast(t('inst_ios'))}
@@ -604,6 +626,12 @@ document.addEventListener('click',async e=>{
   else if(d.dm){await sb.from(grp?'group_messages':'messages').delete().eq('id',d.dm);drawChat();load()}
   else if(d.ed){editing={id:d.ed,g:!!grp};$('#mt').value=MSG[d.ed]||'';$('#editbar').classList.remove('hide');$('#snd').innerHTML=ic('check');$('#snd').disabled=false;$('#mt').focus()}
   else if('ced' in d)stopEdit();
+  else if('fg' in d)sheet('forgot');
+  else if('fsend' in d){const em=$('#fem').value.trim().toLowerCase(),g=$('#gerr');g.className='err';if(!EMAIL_RE.test(em))return g.textContent=t('e_email');
+    const {error}=await sb.auth.resetPasswordForEmail(em,{redirectTo:location.href.split('#')[0]});
+    if(error)g.innerHTML=t('err')+`<small>${esc(error.message)}</small>`;else{g.className='err ok';g.textContent=t('f_sent')}}
+  else if('npsave' in d){const a=$('#np1').value,g=$('#gerr');if(a.length<6)return g.textContent=t('e_pass');if(a!==$('#np2').value)return g.textContent=t('e_match');
+    const {error}=await sb.auth.updateUser({password:a});if(error)g.innerHTML=t('err')+`<small>${esc(error.message)}</small>`;else{closeSheet();toast(t('np_done'))}}
   else if(d.sheet)sheet(d.sheet);
   else if('ginfo' in d)sheet('info',grp);
   else if('mk' in d){const n=$('#gname').value.trim();if(!n)return $('#gname').focus();const m=document.querySelector('input[name=gm]:checked').value;
@@ -623,7 +651,7 @@ applyLang();
 try{
   if(SUPABASE_URL&&SUPABASE_ANON_KEY){
     sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-    sb.auth.onAuthStateChange((_,s)=>setTimeout(async()=>{await boot(s);endSplash()},0));
+    sb.auth.onAuthStateChange((ev,s)=>setTimeout(async()=>{await boot(s);endSplash();if(ev=='PASSWORD_RECOVERY')sheet('newpass')},0));
   }else endSplash();
 }catch(e){sb=null;endSplash()}
 </script>
