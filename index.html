@@ -105,6 +105,7 @@ input[dir=ltr]{text-align:left}
 .btn{width:100%;padding:14px;border-radius:999px;background:var(--gum);color:var(--ink);font-weight:800;font-size:15px;margin-top:6px}
 .btn:hover{background:var(--gum-d)}.btn:disabled{opacity:.6}
 .err{color:#c62828;font-size:13px;min-height:22px;margin:2px 14px 8px}
+.err small{display:block;font-size:11px;color:var(--mut);margin-top:2px;word-break:break-word;direction:ltr;text-align:start}
 /* app */
 #app{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;max-width:1180px;margin:0 auto;overflow:hidden;background:rgba(255,255,255,.28)}
 #side{flex:1;min-height:0;display:flex;flex-direction:column;position:relative}
@@ -274,12 +275,15 @@ html[dir=rtl] .pillin button i.fa-paper-plane{transform:scaleX(-1)}
 </main>
 <div id="sheet" class="hide"><div class="sheet" id="sb"></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.104.0"></script>
 <script>
 /* ===== تنظیمات اتصال به سوپابیس ===== */
 const SUPABASE_URL = "https://tfuwfbuypigvrxqwkniy.supabase.co";       // https://xxxx.supabase.co
 const SUPABASE_ANON_KEY = "sb_publishable_UMm3nzypMaD4cMXhjbIX5g_N10U2z9H";  // anon / publishable key
 /* ==================================== */
+/* سوپابیس آدرس ایمیلِ دامنه‌های بدون MX را رد می‌کند؛ برای همین از دامنه‌ای با MX استفاده می‌کنیم.
+   (تا وقتی Confirm email خاموش است، هیچ ایمیلی ارسال نمی‌شود.) */
+const EMAIL_DOMAIN = "gmail.com";
 
 const L={
 fa:{brand:'گرین‌چت',beta:'آزمایشی',tag:'چت سبز، ساده و سریع',signup:'ثبت‌نام',login:'ورود',user:'نام کاربری',pass:'رمز عبور',pass2:'تکرار رمز عبور',mk:'ساخت حساب',wait:'لطفاً صبر کنید…',e_user:'نام کاربری ۳ تا ۲۰ حرف انگلیسی، عدد یا _ باشد.',e_pass:'رمز عبور دست‌کم ۶ نویسه باشد.',e_match:'تکرار رمز عبور یکسان نیست.',e_taken:'این نام کاربری قبلاً گرفته شده است.',e_wrong:'نام کاربری یا رمز عبور اشتباه است.',e_conf:'در سوپابیس گزینه Confirm email را خاموش کنید.',err:'خطا',chats:'گفتگوها',search:'جستجو',friends:'دوستان',settings:'تنظیمات',ph_search:'کاربر یا گروه را جستجو کنید',min2:'دست‌کم دو حرف بنویسید.',none:'نتیجه‌ای پیدا نشد.',noChats:'هنوز گفتگویی ندارید.<br>کاربری را پیدا کنید یا گروه بسازید.',newChat:'گفتگوی جدید',newGroup:'گروه جدید',you:'شما',add:'دوستی',friend:'دوست',sent:'ارسال شد',acc:'قبول',rej:'رد',cancel:'لغو',del:'حذف',users:'کاربران',groups:'گروه‌ها',join:'پیوستن',open:'باز کردن',members:'{0} عضو',f_in:'درخواست‌های دریافتی',f_out:'درخواست‌های ارسالی',f_my:'دوستان من',noFriends:'هنوز دوستی ندارید.<br>با جستجوی نام کاربری درخواست بفرستید.',reqSent:'درخواست دوستی ارسال شد.',who:'چه کسی می‌تواند به من پیام بدهد؟',all:'همه',fonly:'فقط دوستان',nobody:'هیچ‌کس',logout:'خروج از حساب',lang:'زبان',on:'آنلاین',off:'آفلاین',onN:'{0} نفر آنلاین',msg:'پیام بنویسید…',first:'اولین پیام را بفرستید.',today:'امروز',yest:'دیروز',edit:'ویرایش',edited:'ویرایش‌شده',editing:'در حال ویرایش پیام',blocked:'این کاربر دریافت پیام را محدود کرده است.',pick:'یک گفتگو را انتخاب کنید',back:'بازگشت',g_name:'نام گروه',g_join:'چه کسی می‌تواند بپیوندد؟',m_open:'آزاد برای همه',m_link:'با لینک دعوت',m_friends:'فقط دوستان',g_mk:'ساخت گروه',g_code:'پیوستن با لینک یا کد دعوت',g_ph:'لینک یا کد را وارد کنید',g_info:'اطلاعات گروه',g_link:'لینک دعوت',copy:'کپی',copied:'لینک کپی شد.',leave:'ترک گروه',delg:'حذف گروه',joined:'به گروه پیوستید.',joinFail:'امکان پیوستن نیست.',owner:'مدیر',latest:'آخرین پیام‌ها'},
@@ -395,14 +399,14 @@ const endSplash=()=>{if(ended)return;ended=true;minSplash.then(()=>{const s=$('#
 setTimeout(endSplash,7000);
 
 /* ---------- auth ---------- */
-const mail=u=>u+'@greenchat.app';
+const mail=u=>u+'@'+EMAIL_DOMAIN;
 function setMode(m){mode=m;$('#seg').dataset.m=m;$('#tLogin').classList.toggle('on',m=='login');$('#tSign').classList.toggle('on',m=='sign');$('#p2w').classList.toggle('shut',m=='login');$('#p2w').inert=m=='login';$('#go').textContent=t(m=='login'?'login':'mk');$('#aerr').textContent='';$('#p').autocomplete=m=='login'?'current-password':'new-password'}
 $('#tLogin').onclick=()=>setMode('login');$('#tSign').onclick=()=>setMode('sign');
 $('#eye').onclick=()=>{const h=$('#p').type=='password';$('#p').type=$('#p2').type=h?'text':'password';$('#eye').innerHTML=ic(h?'eye-slash':'eye')};
 $('#authForm').onkeydown=e=>{if(e.key=='Enter')$('#go').click()};
 $('#go').onclick=async()=>{
   const u=$('#u').value.trim().toLowerCase(),p=$('#p').value,err=$('#aerr');err.textContent='';
-  if(!sb)return err.textContent=t('err');
+  if(!sb){err.innerHTML=t('err')+`<small>${typeof supabase=='undefined'?'Supabase library failed to load (CDN blocked?)':'Missing SUPABASE_URL / KEY'}</small>`;return}
   if(!/^[a-z0-9_]{3,20}$/.test(u))return err.textContent=t('e_user');
   if(p.length<6)return err.textContent=t('e_pass');
   if(mode=='sign'&&p!==$('#p2').value)return err.textContent=t('e_match');
@@ -415,7 +419,8 @@ $('#go').onclick=async()=>{
     }else{const {error}=await sb.auth.signInWithPassword({email:mail(u),password:p});if(error)throw error}
   }catch(e){
     const m=e.message||'';
-    err.textContent=/already|registered/i.test(m)?t('e_taken'):/invalid login/i.test(m)?t('e_wrong'):m=='confirm'?t('e_conf'):t('err');
+    err.textContent=/already|registered/i.test(m)?t('e_taken'):/invalid login/i.test(m)?t('e_wrong'):m=='confirm'?t('e_conf'):'';
+    if(!err.textContent)err.innerHTML=t('err')+`<small>${esc(m)}</small>`;
   }
   $('#go').disabled=false;setMode(mode);
 };
@@ -425,8 +430,8 @@ async function boot(session){
   if(!session){me=null;mine=null;other=grp=null;chan&&sb.removeChannel(chan);pch&&sb.removeChannel(pch);online=new Set();$('#app').classList.add('hide');$('#chat').classList.add('hide');$(langChosen?'#auth':'#langpg').classList.remove('hide');$(langChosen?'#langpg':'#auth').classList.add('hide');return}
   if(me==session.user.id&&mine)return;
   me=session.user.id;
-  let data=null;try{({data}=await sb.from('profiles').select('*').eq('id',me).single())}catch(e){}
-  mine=data;if(!mine){me=null;toast(t('err'));return}P[me]=mine;
+  let data=null,perr='';try{const r=await sb.from('profiles').select('*').eq('id',me).single();data=r.data;perr=r.error?r.error.message:''}catch(e){perr=e.message}
+  mine=data;if(!mine){me=null;toast(t('err'));$('#aerr').innerHTML=t('err')+`<small>profile: ${esc(perr||'not found — run the SQL file')}</small>`;return}P[me]=mine;
   $('#auth').classList.add('hide');$('#langpg').classList.add('hide');$('#app').classList.remove('hide');
   await load();animate();
   chan&&sb.removeChannel(chan);chan=sb.channel('gc');
